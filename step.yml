@@ -1,0 +1,73 @@
+#
+# A couple of useful guides & docs:
+#
+# - Main Bitrise CLI docs: https://github.com/bitrise-io/bitrise/tree/master/_docs
+# - Step Development Guideline: https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
+# - Bitrise.yml format spec: https://github.com/bitrise-io/bitrise/blob/master/_docs/bitrise-yml-format-spec.md
+# - Bitrise docs: http://devcenter.bitrise.io/
+# - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
+
+title: |-
+  Send message to discord
+summary: |
+  Send message to [Discord](https://discord.com/) 
+description: |
+  Send message to discord with QRCode attachments
+website: https://github.com/https://github.com/aabanaag/step-discord-message/bitrise-step-send-message-to-discord
+source_code_url: https://github.com/https://github.com/aabanaag/step-discord-message/bitrise-step-send-message-to-discord
+support_url: https://github.com/https://github.com/aabanaag/step-discord-message/bitrise-step-send-message-to-discord/issues
+host_os_tags:
+  - osx-10.10
+  - ubuntu-16.04
+
+type_tags:
+  - notification
+
+is_requires_admin_user: false 
+is_always_run: true 
+is_skippable: true
+run_if: ""
+
+deps:
+  brew:
+    - name: git
+    - name: wget
+  apt_get:
+    - name: git
+    - name: wget
+
+
+toolkit:
+  bash:
+    entry_file: step.sh
+
+
+inputs:
+  - webhook_url:
+    opts:
+      title: "Discord webhook URL (webhook URL is required)"
+      description: |
+        **https://discord.com/developers/docs/resources/webhook#get-channel-webhooks**
+      is_required: false
+      is_sensitive: true
+
+  - build_message: |
+      *$BITRISE_APP_TITLE* build *$BITRISE_BUILD_NUMBER* is now available: [Download|$BITRISE_PUBLIC_INSTALL_PAGE_URL]
+      ||Build number|$BITRISE_BUILD_NUMBER|
+      ||Author|$GIT_CLONE_COMMIT_AUTHOR_NAME|
+
+      [Show build details|$BITRISE_BUILD_URL]
+    opts:
+      title: "Build message"
+      summary: "The content of the build message that will be posted"
+      description: "The content of the build message that will be posted. You can use markdown. Details [here|https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all]"
+      is_required: true
+
+  - thumbnail:
+    opts:
+      title: "Thumbnail for QRCode"
+      description: |
+        **https://discord.com/developers/docs/resources/channel#embed-object**
+        **https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure**
+      is_required: false
+
